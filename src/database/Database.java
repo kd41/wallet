@@ -57,40 +57,41 @@ public class Database {
       } else {
         pstmt2.setString(1, userName);
         pstmt2.setBigDecimal(2, amount);
-        pstmt2.executeQuery();
+        pstmt2.executeUpdate();
+        balanceVesion = 1;
       }
     }
     return balanceVesion;
   }
 
   public int getVersionByUsername(String userName) throws Exception {
+    int version = 0;
     try (Connection conn = getHSQLConnection()) {
       String query = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
       PreparedStatement pt = conn.prepareStatement(query);
       pt.setNString(1, userName);
       ResultSet rs = pt.executeQuery();
-      int version = 0;
       while (rs.next()) {
         version = rs.getInt("BALANCE_VERSION");
         System.out.println(version);
       }
-      return version;
     }
+    return version;
   }
 
   public BigDecimal getBalanceByUserName(String userName) throws Exception {
+    BigDecimal balance = new BigDecimal(0);
     try (Connection conn = getHSQLConnection()) {
       String query = "SELECT BALANCE FROM " + DB_TABLE + " WHERE USERNAME = ?";
       PreparedStatement pt = conn.prepareStatement(query);
       pt.setNString(1, userName);
       ResultSet rs = pt.executeQuery();
-      BigDecimal balance = new BigDecimal(0);
       while (rs.next()) {
         balance = rs.getBigDecimal("BALANCE");
         System.out.println("balance for " + userName + " is " + balance);
       }
-      return balance;
     }
+    return balance;
   }
 
   public void insertMockData() throws Exception {

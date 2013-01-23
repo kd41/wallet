@@ -1,11 +1,23 @@
 package database.services;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class WalletRequest {
+public class WalletRequest implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   private String userName;
   private BigDecimal balanceChange;
   private long transactionID;
+
+  public WalletRequest() {
+  }
+
+  public WalletRequest(String userName, BigDecimal balanceChange, long transactionID) {
+    this.userName = userName;
+    this.balanceChange = balanceChange;
+    this.transactionID = transactionID;
+  }
 
   public String getUserName() {
     return userName;

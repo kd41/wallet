@@ -6,71 +6,64 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import socket.server.Server;
+
+import database.services.WalletRequest;
+import database.services.WalletResponse;
+
 public class Client {
+  private static final Logger log = LoggerFactory.getLogger(Server.class);
+
   private String host;
   private int port;
-  private Socket socket;
-  private ObjectOutputStream out;
-  private ObjectInputStream in;
 
-  private String message;
-  private String response;
+  private WalletRequest message;
+  private WalletResponse response;
 
-  public Client(String host, int port, String message) {
+  public Client(String host, int port, WalletRequest message) {
     this.host = host;
     this.port = port;
     this.message = message;
   }
 
-  protected void start() {
-    try {
+  public void start() {
+    try (Socket socket = new Socket(host, port)) {
       try {
-        socket = new Socket(host, port);
         socket.setSoTimeout(3000);
       } catch (Exception e) {
         System.out.println("Please check is server running on host: " + host + ", port: " + port);
         return;
       }
-      out = new ObjectOutputStream(socket.getOutputStream());
-      out.flush();
-      in = new ObjectInputStream(socket.getInputStream());
-      try {
-        // send
-        out.writeObject(message);
+      try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
         out.flush();
-        // receive
-        response = (String) in.readObject();
-      } catch (IOException e) {
-        System.out.println(e);
-      } catch (ClassNotFoundException e) {
-        System.out.println(e);
+        try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+          // send
+          out.writeObject(message);
+          out.flush();
+          log.info("Client sended: " + message);
+
+          // receive
+          response = (WalletResponse) in.readObject();
+          log.info("Client received: " + response);
+
+        } catch (ClassNotFoundException e) {
+          System.out.println(e);
+        }
       }
     } catch (UnknownHostException e) {
     } catch (IOException e) {
       System.out.println(e);
-    } finally {
-      try {
-        if (in != null) {
-          in.close();
-        }
-      } catch (IOException e) {
-      }
-      try {
-        out.close();
-      } catch (IOException e) {
-      }
-      try {
-        socket.close();
-      } catch (IOException e) {
-      }
     }
   }
 
-  protected String getResponse() {
+  public WalletResponse getResponse() {
     return response;
   }
 
-  protected void setMessage(String message) {
+  protected void setMessage(WalletRequest message) {
     this.message = message;
   }
 

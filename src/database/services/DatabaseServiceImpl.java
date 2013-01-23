@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import database.Database;
 import errors.NegativeBalanceException;
+import errors.ServerException;
 
 public class DatabaseServiceImpl implements DatabaseService {
   private Database database;
@@ -17,7 +18,6 @@ public class DatabaseServiceImpl implements DatabaseService {
       BigDecimal newBalance = oldBalance.add(request.getBalanceChange());
       System.out.println("new balance: " + newBalance);
       if (newBalance.signum() < 0) {
-        response.setErroCode(NegativeBalanceException.ERROR_CODE);
         throw new NegativeBalanceException(request.getUserName() + " can't have negative balance");
       }
       int balanceVersion = getDatabase().save(request.getUserName(), newBalance);
@@ -26,6 +26,11 @@ public class DatabaseServiceImpl implements DatabaseService {
       System.out.println("user " + request.getUserName() + " saved new balance: " + newBalance);
     } catch (Exception e) {
       e.printStackTrace();
+      if (e instanceof NegativeBalanceException) {
+        response.setErroCode(NegativeBalanceException.ERROR_CODE);
+      } else {
+        response.setErroCode(ServerException.ERROR_CODE);
+      }
     }
 
     return response;
