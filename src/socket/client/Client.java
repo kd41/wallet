@@ -27,6 +27,7 @@ public class Client {
     this.host = host;
     this.port = port;
     this.message = message;
+    start();
   }
 
   public void start() {
@@ -34,7 +35,7 @@ public class Client {
       try {
         socket.setSoTimeout(3000);
       } catch (Exception e) {
-        System.out.println("Please check is server running on host: " + host + ", port: " + port);
+        log.error("Client can't run on host: {} and port: {}", host, port);
         return;
       }
       try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
@@ -44,18 +45,15 @@ public class Client {
           out.writeObject(message);
           out.flush();
           log.info("Client sended: " + message);
-
           // receive
           response = (WalletResponse) in.readObject();
           log.info("Client received: " + response);
-
         } catch (ClassNotFoundException e) {
-          System.out.println(e);
+          log.error(e.getMessage(), e);
         }
       }
-    } catch (UnknownHostException e) {
     } catch (IOException e) {
-      System.out.println(e);
+      log.error(e.getMessage(), e);
     }
   }
 

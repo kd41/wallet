@@ -60,7 +60,7 @@ public class WalletResponse implements Serializable {
 
   @Override
   public String toString() {
-    return "WalletResponse [transactionID=" + transactionID + ", erroCode=" + erroCode + ", balanceVersion=" + balanceVersion + ", balanceChange=" + balanceChange
+    return ":OUT WalletResponse [transactionID=" + transactionID + ", erroCode=" + erroCode + ", balanceVersion=" + balanceVersion + ", balanceChange=" + balanceChange
            + ", balanceAmount=" + balanceAmount + "]";
   }
 }

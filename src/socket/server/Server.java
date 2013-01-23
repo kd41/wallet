@@ -15,8 +15,11 @@ import database.services.WalletResponse;
 
 public class Server {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
-  private ServerSocket serverSocket;
+  private static final Logger _log = LoggerFactory.getLogger("server");
+
   protected boolean isRunning = true;
+  private ServerSocket serverSocket;
+  private ServerService service = new ServerServiceImpl();
 
   public Server(int port) throws IOException {
     serverSocket = new ServerSocket(port);
@@ -35,7 +38,6 @@ public class Server {
   private class ServerThread extends Thread {
     private Socket clientSocket;
     private int count = -1;
-    private ObjectOutputStream out;
     private WalletRequest message;
 
     private ServerThread(Socket clientSocket, int count) {
@@ -45,41 +47,23 @@ public class Server {
 
     @Override
     public void run() {
-      try {
-        out = new ObjectOutputStream(clientSocket.getOutputStream());
+      try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
         out.flush();
         try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
           do {
             try {
               message = (WalletRequest) in.readObject();
-              log.info("Server received: " + message);
-              sendMessage(new WalletResponse(message));
+              out.writeObject(service.getWalletResponse(message));
+              out.flush();
             } catch (ClassNotFoundException e) {
-              System.out.println("Data received in unknown format: " + e);
+              log.error(e.getMessage(), e);
             }
           } while (true);
         }
       } catch (EOFException e) {
       } catch (IOException e) {
-        System.out.println(e);
-      } finally {
-        try {
-          out.close();
-        } catch (IOException e) {
-          System.out.println(e);
-        }
+        log.error(e.getMessage(), e);
       }
     }
-
-    private void sendMessage(WalletResponse msg) {
-      log.info("Server sended: " + msg);
-      try {
-        out.writeObject(msg);
-        out.flush();
-      } catch (IOException e) {
-        System.out.println(e);
-      }
-    }
-
   }
 }

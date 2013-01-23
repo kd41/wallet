@@ -45,7 +45,7 @@ public class WalletRequest implements Serializable {
 
   @Override
   public String toString() {
-    return "WalletRequest [userName=" + userName + ", balanceChange=" + balanceChange + ", transactionID=" + transactionID + "]";
+    return ":IN WalletRequest [userName=" + userName + ", balanceChange=" + balanceChange + ", transactionID=" + transactionID + "]";
   }
 
 }

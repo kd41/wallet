@@ -30,23 +30,22 @@ public class Program {
     database.getVersionByUsername(userName);
     database.printData();
 
-    WalletRequest request = new WalletRequest();
-    request.setBalanceChange(new BigDecimal(1));
-    request.setTransactionID(System.currentTimeMillis());
-    request.setUserName(userName);
-    System.out.println(request);
-    WalletResponse response = service.getWalletResponse(request);
-    System.out.println(response);
+    // WalletRequest request = new WalletRequest();
+    // request.setBalanceChange(new BigDecimal(1));
+    // request.setTransactionID(System.currentTimeMillis());
+    // request.setUserName(userName);
+    // System.out.println(request);
+    // WalletResponse response = service.getWalletResponse(request);
+    // System.out.println(response);
+    //
+    // database.printData();
 
-    database.printData();
-
-    log.info(request.toString());
-    log.info(response.toString());
+    // log.info(request.toString());
+    // log.info(response.toString());
 
     runServer(12345);
 
     Client client = new Client("localhost", 12345, new WalletRequest(userName, new BigDecimal(1), System.currentTimeMillis()));
-    client.start();
 
     WalletResponse walletResponse = client.getResponse();
 
