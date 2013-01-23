@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class WalletRequest {
   private String userName;
-  private BigDecimal amount;
+  private BigDecimal balanceChange;
   private long transactionID;
 
   public String getUserName() {
@@ -15,12 +15,12 @@ public class WalletRequest {
     this.userName = userName;
   }
 
-  public BigDecimal getAmount() {
-    return amount;
+  public BigDecimal getBalanceChange() {
+    return balanceChange;
   }
 
-  public void setAmount(BigDecimal amount) {
-    this.amount = amount;
+  public void setBalanceChange(BigDecimal balanceChange) {
+    this.balanceChange = balanceChange;
   }
 
   public long getTransactionID() {
@@ -30,4 +30,10 @@ public class WalletRequest {
   public void setTransactionID(long transactionID) {
     this.transactionID = transactionID;
   }
+
+  @Override
+  public String toString() {
+    return "WalletRequest [userName=" + userName + ", balanceChange=" + balanceChange + ", transactionID=" + transactionID + "]";
+  }
+
 }

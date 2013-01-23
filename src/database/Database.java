@@ -32,7 +32,8 @@ public class Database {
     return database;
   }
 
-  public void save(String userName, BigDecimal amount) throws Exception {
+  public int save(String userName, BigDecimal amount) throws Exception {
+    int balanceVesion = 0;
     try (Connection conn = getHSQLConnection()) {
       String sql1 = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
       String sql2 = "insert into " + DB_TABLE + " (USERNAME,BALANCE_VERSION,BALANCE) values (?, 1, ?)";
@@ -46,7 +47,7 @@ public class Database {
       ResultSet rset = pstmt1.executeQuery();
       if (rset.next()) {
         System.out.println("The user with userName: " + userName + " already exists.");
-        int balanceVesion = rset.getInt("BALANCE_VERSION");
+        balanceVesion = rset.getInt("BALANCE_VERSION");
         rset.close();
 
         pstmt3.setInt(1, ++balanceVesion);
@@ -59,6 +60,7 @@ public class Database {
         pstmt2.executeQuery();
       }
     }
+    return balanceVesion;
   }
 
   public int getVersionByUsername(String userName) throws Exception {
@@ -73,6 +75,21 @@ public class Database {
         System.out.println(version);
       }
       return version;
+    }
+  }
+
+  public BigDecimal getBalanceByUserName(String userName) throws Exception {
+    try (Connection conn = getHSQLConnection()) {
+      String query = "SELECT BALANCE FROM " + DB_TABLE + " WHERE USERNAME = ?";
+      PreparedStatement pt = conn.prepareStatement(query);
+      pt.setNString(1, userName);
+      ResultSet rs = pt.executeQuery();
+      BigDecimal balance = new BigDecimal(0);
+      while (rs.next()) {
+        balance = rs.getBigDecimal("BALANCE");
+        System.out.println("balance for " + userName + " is " + balance);
+      }
+      return balance;
     }
   }
 
