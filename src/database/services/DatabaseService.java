@@ -1,5 +1,11 @@
 package database.services;
 
+import java.math.BigDecimal;
+
 public interface DatabaseService {
-  public WalletResponse getWalletResponse(WalletRequest request);
+  public WalletChangeResponse getWalletResponse(WalletChangeRequest request);
+
+  public BigDecimal getBalanceByUserName(String userName);
+
+  public int getBalanceVersionByUserName(String userName);
 }

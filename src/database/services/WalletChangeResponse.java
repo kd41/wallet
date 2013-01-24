@@ -3,7 +3,7 @@ package database.services;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class WalletResponse implements Serializable {
+public class WalletChangeResponse implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private long transactionID;
@@ -12,7 +12,7 @@ public class WalletResponse implements Serializable {
   private BigDecimal balanceChange;
   private BigDecimal balanceAmount;
 
-  public WalletResponse(WalletRequest request) {
+  public WalletChangeResponse(WalletChangeRequest request) {
     this.transactionID = request.getTransactionID();
     this.balanceChange = request.getBalanceChange();
     this.erroCode = 0;
@@ -60,7 +60,7 @@ public class WalletResponse implements Serializable {
 
   @Override
   public String toString() {
-    return ":OUT WalletResponse [transactionID=" + transactionID + ", erroCode=" + erroCode + ", balanceVersion=" + balanceVersion + ", balanceChange=" + balanceChange
+    return ":OUT WalletChangeResponse [transactionID=" + transactionID + ", erroCode=" + erroCode + ", balanceVersion=" + balanceVersion + ", balanceChange=" + balanceChange
            + ", balanceAmount=" + balanceAmount + "]";
   }
 }

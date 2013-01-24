@@ -1,8 +1,8 @@
 package socket.server;
 
-import database.services.WalletRequest;
-import database.services.WalletResponse;
+import database.services.WalletChangeRequest;
+import database.services.WalletChangeResponse;
 
 public interface ServerService {
-  public WalletResponse getWalletResponse(WalletRequest request);
+  public WalletChangeResponse getWalletResponse(WalletChangeRequest request);
 }

@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import database.services.DatabaseService;
 import database.services.DatabaseServiceImpl;
-import database.services.WalletRequest;
-import database.services.WalletResponse;
+import database.services.WalletChangeRequest;
+import database.services.WalletChangeResponse;
 
 public class ServerServiceImpl implements ServerService {
   private static final Logger _log = LoggerFactory.getLogger("server");
@@ -24,11 +24,12 @@ public class ServerServiceImpl implements ServerService {
   private AtomicInteger count = new AtomicInteger();
 
   @Override
-  public WalletResponse getWalletResponse(WalletRequest request) {
+  public WalletChangeResponse getWalletResponse(WalletChangeRequest request) {
+    log.info("Thread name: {}", Thread.currentThread().getName());
     count.incrementAndGet();
     long start = System.currentTimeMillis();
     _log.debug(request.toString());
-    WalletResponse response = service.getWalletResponse(request);
+    WalletChangeResponse response = service.getWalletResponse(request);
     _log.debug(response.toString());
     long stop = System.currentTimeMillis();
     long duration = stop - start;

@@ -7,8 +7,8 @@ import java.security.Provider.Service;
 import database.Database;
 import database.services.DatabaseService;
 import database.services.DatabaseServiceImpl;
-import database.services.WalletRequest;
-import database.services.WalletResponse;
+import database.services.WalletChangeRequest;
+import database.services.WalletChangeResponse;
 
 import org.slf4j.Logger;
 
@@ -45,9 +45,10 @@ public class Program {
 
     runServer(12345);
 
-    Client client = new Client("localhost", 12345, new WalletRequest(userName, new BigDecimal(1), System.currentTimeMillis()));
-
-    WalletResponse walletResponse = client.getResponse();
+    for (int i = 0; i < 10; i++) {
+      Client client = new Client("localhost", 12345, new WalletChangeRequest(userName, new BigDecimal(1), System.currentTimeMillis()));
+      WalletChangeResponse walletResponse = client.getResponse();
+    }
 
   }
 

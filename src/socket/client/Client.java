@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import socket.server.Server;
 
-import database.services.WalletRequest;
-import database.services.WalletResponse;
+import database.services.WalletChangeRequest;
+import database.services.WalletChangeResponse;
 
 public class Client {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
@@ -20,10 +20,10 @@ public class Client {
   private String host;
   private int port;
 
-  private WalletRequest message;
-  private WalletResponse response;
+  private WalletChangeRequest message;
+  private WalletChangeResponse response;
 
-  public Client(String host, int port, WalletRequest message) {
+  public Client(String host, int port, WalletChangeRequest message) {
     this.host = host;
     this.port = port;
     this.message = message;
@@ -31,6 +31,7 @@ public class Client {
   }
 
   public void start() {
+    log.info("Thread name: {}", Thread.currentThread().getName());
     try (Socket socket = new Socket(host, port)) {
       try {
         socket.setSoTimeout(3000);
@@ -46,7 +47,7 @@ public class Client {
           out.flush();
           log.info("Client sended: " + message);
           // receive
-          response = (WalletResponse) in.readObject();
+          response = (WalletChangeResponse) in.readObject();
           log.info("Client received: " + response);
         } catch (ClassNotFoundException e) {
           log.error(e.getMessage(), e);
@@ -57,11 +58,11 @@ public class Client {
     }
   }
 
-  public WalletResponse getResponse() {
+  public WalletChangeResponse getResponse() {
     return response;
   }
 
-  protected void setMessage(WalletRequest message) {
+  protected void setMessage(WalletChangeRequest message) {
     this.message = message;
   }
 

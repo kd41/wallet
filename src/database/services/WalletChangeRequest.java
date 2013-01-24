@@ -3,17 +3,14 @@ package database.services;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class WalletRequest implements Serializable {
+public class WalletChangeRequest implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private String userName;
   private BigDecimal balanceChange;
   private long transactionID;
 
-  public WalletRequest() {
-  }
-
-  public WalletRequest(String userName, BigDecimal balanceChange, long transactionID) {
+  public WalletChangeRequest(String userName, BigDecimal balanceChange, long transactionID) {
     this.userName = userName;
     this.balanceChange = balanceChange;
     this.transactionID = transactionID;
@@ -45,7 +42,7 @@ public class WalletRequest implements Serializable {
 
   @Override
   public String toString() {
-    return ":IN WalletRequest [userName=" + userName + ", balanceChange=" + balanceChange + ", transactionID=" + transactionID + "]";
+    return ":IN WalletChangeRequest [userName=" + userName + ", balanceChange=" + balanceChange + ", transactionID=" + transactionID + "]";
   }
 
 }

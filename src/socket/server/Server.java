@@ -10,8 +10,8 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import database.services.WalletRequest;
-import database.services.WalletResponse;
+import database.services.WalletChangeRequest;
+import database.services.WalletChangeResponse;
 
 public class Server {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
@@ -25,6 +25,7 @@ public class Server {
     serverSocket = new ServerSocket(port);
     int count = 0;
     while (isRunning) {
+      log.info("here");
       Socket clientSocket = serverSocket.accept();
       ServerThread thread = new ServerThread(clientSocket, count++);
       thread.run();
@@ -38,7 +39,7 @@ public class Server {
   private class ServerThread extends Thread {
     private Socket clientSocket;
     private int count = -1;
-    private WalletRequest message;
+    private WalletChangeRequest message;
 
     private ServerThread(Socket clientSocket, int count) {
       this.clientSocket = clientSocket;
@@ -51,8 +52,9 @@ public class Server {
         out.flush();
         try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
           do {
+            log.info("Thread name: {}", Thread.currentThread().getName());
             try {
-              message = (WalletRequest) in.readObject();
+              message = (WalletChangeRequest) in.readObject();
               out.writeObject(service.getWalletResponse(message));
               out.flush();
             } catch (ClassNotFoundException e) {

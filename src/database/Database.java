@@ -8,7 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import socket.server.Server;
+
 public class Database {
+  private static final Logger log = LoggerFactory.getLogger(Database.class);
+
   private static final String DB_NAME = "db_wallet";
   private static final String DB_USER = "sa";
   private static final String DB_PASSWORD = "";
@@ -33,6 +40,7 @@ public class Database {
   }
 
   public int save(String userName, BigDecimal amount) throws Exception {
+    log.info("Thread name: {}", Thread.currentThread().getName());
     int balanceVesion = 0;
     try (Connection conn = getHSQLConnection()) {
       String sql1 = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -46,7 +54,6 @@ public class Database {
       pstmt1.setString(1, userName);
       ResultSet rset = pstmt1.executeQuery();
       if (rset.next()) {
-        System.out.println("The user with userName: " + userName + " already exists.");
         balanceVesion = rset.getInt("BALANCE_VERSION");
         rset.close();
 
@@ -64,7 +71,7 @@ public class Database {
     return balanceVesion;
   }
 
-  public int getVersionByUsername(String userName) throws Exception {
+  public int getVersionByUsername(String userName) {
     int version = 0;
     try (Connection conn = getHSQLConnection()) {
       String query = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -73,13 +80,14 @@ public class Database {
       ResultSet rs = pt.executeQuery();
       while (rs.next()) {
         version = rs.getInt("BALANCE_VERSION");
-        System.out.println(version);
       }
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
     }
     return version;
   }
 
-  public BigDecimal getBalanceByUserName(String userName) throws Exception {
+  public BigDecimal getBalanceByUserName(String userName) {
     BigDecimal balance = new BigDecimal(0);
     try (Connection conn = getHSQLConnection()) {
       String query = "SELECT BALANCE FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -88,8 +96,9 @@ public class Database {
       ResultSet rs = pt.executeQuery();
       while (rs.next()) {
         balance = rs.getBigDecimal("BALANCE");
-        System.out.println("balance for " + userName + " is " + balance);
       }
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
     }
     return balance;
   }
