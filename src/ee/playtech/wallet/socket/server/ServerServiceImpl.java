@@ -1,4 +1,4 @@
-package socket.server;
+package ee.playtech.wallet.socket.server;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,10 +8,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import database.services.DatabaseService;
-import database.services.DatabaseServiceImpl;
-import database.services.WalletChangeRequest;
-import database.services.WalletChangeResponse;
+import ee.playtech.wallet.database.services.DatabaseService;
+import ee.playtech.wallet.database.services.DatabaseServiceImpl;
+import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.database.services.WalletChangeResponse;
 
 public class ServerServiceImpl implements ServerService {
   private static final Logger _log = LoggerFactory.getLogger("server");

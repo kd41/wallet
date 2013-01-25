@@ -1,4 +1,4 @@
-package test;
+package ee.playtech.wallet.test;
 
 import java.math.BigDecimal;
 
@@ -7,11 +7,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import database.services.DatabaseService;
-import database.services.DatabaseServiceImpl;
-import database.services.WalletChangeRequest;
-import database.services.WalletChangeResponse;
-import errors.NegativeBalanceException;
+import ee.playtech.wallet.database.services.DatabaseService;
+import ee.playtech.wallet.database.services.DatabaseServiceImpl;
+import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.database.services.WalletChangeResponse;
+import ee.playtech.wallet.errors.NegativeBalanceException;
 
 public class ProgramTest {
   private static String USER_NAME = "testusername2";

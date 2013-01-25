@@ -1,4 +1,4 @@
-package database.services;
+package ee.playtech.wallet.database.services;
 
 import java.math.BigDecimal;
 

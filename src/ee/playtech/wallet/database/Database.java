@@ -1,4 +1,4 @@
-package database;
+package ee.playtech.wallet.database;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -11,7 +11,8 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import socket.server.Server;
+import ee.playtech.wallet.socket.server.Server;
+
 
 public class Database {
   private static final Logger log = LoggerFactory.getLogger(Database.class);

@@ -1,4 +1,4 @@
-package database;
+package ee.playtech.wallet.database;
 
 public enum DirectionType {
   IN(true), OUT(false);

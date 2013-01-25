@@ -1,21 +1,21 @@
-package program;
+package ee.playtech.wallet.program;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.Provider.Service;
 
-import database.Database;
-import database.services.DatabaseService;
-import database.services.DatabaseServiceImpl;
-import database.services.WalletChangeRequest;
-import database.services.WalletChangeResponse;
+import ee.playtech.wallet.database.Database;
+import ee.playtech.wallet.database.services.DatabaseService;
+import ee.playtech.wallet.database.services.DatabaseServiceImpl;
+import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.database.services.WalletChangeResponse;
+import ee.playtech.wallet.socket.client.Client;
+import ee.playtech.wallet.socket.server.Server;
 
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
 
-import socket.client.Client;
-import socket.server.Server;
 
 public class Program {
   private static final Logger log = LoggerFactory.getLogger(Program.class);
@@ -25,10 +25,10 @@ public class Program {
   public static void main(String... args) throws Exception {
     String userName = "alex1";
 
-    Database database = Database.getInstance();
-    // database.insertMockData();
-    database.getVersionByUsername(userName);
-    database.printData();
+    // Database database = Database.getInstance();
+    // // database.insertMockData();
+    // database.getVersionByUsername(userName);
+    // database.printData();
 
     // WalletRequest request = new WalletRequest();
     // request.setBalanceChange(new BigDecimal(1));
@@ -43,7 +43,7 @@ public class Program {
     // log.info(request.toString());
     // log.info(response.toString());
 
-    runServer(12345);
+    // runServer(12345);
 
     for (int i = 0; i < 10; i++) {
       Client client = new Client("localhost", 12345, new WalletChangeRequest(userName, new BigDecimal(1), System.currentTimeMillis()));

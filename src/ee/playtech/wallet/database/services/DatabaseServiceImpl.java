@@ -1,10 +1,10 @@
-package database.services;
+package ee.playtech.wallet.database.services;
 
 import java.math.BigDecimal;
 
-import database.Database;
-import errors.NegativeBalanceException;
-import errors.ServerException;
+import ee.playtech.wallet.database.Database;
+import ee.playtech.wallet.errors.NegativeBalanceException;
+import ee.playtech.wallet.errors.ServerException;
 
 public class DatabaseServiceImpl implements DatabaseService {
   private Database database;

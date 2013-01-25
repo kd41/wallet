@@ -1,4 +1,4 @@
-package program;
+package ee.playtech.wallet.program;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

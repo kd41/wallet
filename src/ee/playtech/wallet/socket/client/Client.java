@@ -1,4 +1,4 @@
-package socket.client;
+package ee.playtech.wallet.socket.client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,10 +9,10 @@ import java.net.UnknownHostException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import socket.server.Server;
 
-import database.services.WalletChangeRequest;
-import database.services.WalletChangeResponse;
+import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.database.services.WalletChangeResponse;
+import ee.playtech.wallet.socket.server.Server;
 
 public class Client {
   private static final Logger log = LoggerFactory.getLogger(Server.class);

@@ -1,4 +1,4 @@
-package socket.server;
+package ee.playtech.wallet.socket.server;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import database.services.WalletChangeRequest;
-import database.services.WalletChangeResponse;
+import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.database.services.WalletChangeResponse;
 
 public class Server {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
