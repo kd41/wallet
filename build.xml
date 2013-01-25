@@ -1,0 +1,50 @@
+<project>
+	
+	<property name="build.folder" value="build" />
+	<property name="jar.name" value="Wallet" />
+	
+	<path id="wallet.classpath">
+		<pathelement path="${classpath}" />
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="classes" />
+	</path>  
+	
+	<target name="all" depends="clean,compile,jar,run" />
+			
+	<target name="clean">
+		<delete dir="${build.folder}" />
+	</target>
+
+	<target name="compile">
+		<copy todir="${build.folder}/lib">
+			<fileset dir="lib" >
+				<include name="**/*" />
+			</fileset> 
+		</copy>
+	
+		<javac srcdir="src" destdir="${build.folder}" includeantruntime="false">
+			<classpath refid="wallet.classpath" />
+		</javac>
+	</target>
+
+	<target name="jar">
+		<jar destfile="${build.folder}/jar/${jar.name}.jar" basedir="${build.folder}">
+			<manifest>
+				<attribute name="Main-Class" value="ee.playtech.wallet.program.Program" />
+				<attribute name="Class-Path" value="*.jar" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run">
+		<java jar="${build.folder}/jar/${jar.name}.jar" fork="true">
+			<classpath>
+				<pathelement location="${build}" />
+				<path refid="wallet.classpath" />
+			</classpath>
+		</java>
+	</target>
+
+</project>
