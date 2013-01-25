@@ -1,15 +1,17 @@
 <project>
 	
 	<property name="build.folder" value="build" />
-	<property name="jar.name" value="Wallet" />
+	<property name="jar.name" value="Wallet.jar" />
 	
 	<path id="wallet.classpath">
-		<pathelement path="${classpath}" />
 		<fileset dir="lib">
 			<include name="**/*.jar" />
 		</fileset>
-		<pathelement location="classes" />
-	</path>  
+	</path>
+	
+	<manifestclasspath property="manifest.classpath" jarfile="${jar.name}">
+		<classpath refid="wallet.classpath" />
+	</manifestclasspath>
 	
 	<target name="all" depends="clean,compile,jar,run" />
 			
@@ -30,21 +32,16 @@
 	</target>
 
 	<target name="jar">
-		<jar destfile="${build.folder}/jar/${jar.name}.jar" basedir="${build.folder}">
+		<jar destfile="${build.folder}/jar/${jar.name}" basedir="${build.folder}">
 			<manifest>
 				<attribute name="Main-Class" value="ee.playtech.wallet.program.Program" />
-				<attribute name="Class-Path" value="*.jar" />
+				<attribute name="Class-Path" value=". ${wallet.classpath}" />
 			</manifest>
 		</jar>
 	</target>
 
 	<target name="run">
-		<java jar="${build.folder}/jar/${jar.name}.jar" fork="true">
-			<classpath>
-				<pathelement location="${build}" />
-				<path refid="wallet.classpath" />
-			</classpath>
-		</java>
+		<java jar="${build.folder}/jar/${jar.name}" fork="true" />
 	</target>
 
 </project>

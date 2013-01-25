@@ -1,16 +1,12 @@
 package ee.playtech.wallet.program;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ee.playtech.wallet.database.services.DatabaseService;
 import ee.playtech.wallet.database.services.DatabaseServiceImpl;
-import ee.playtech.wallet.database.services.WalletChangeRequest;
-import ee.playtech.wallet.database.services.WalletChangeResponse;
-import ee.playtech.wallet.socket.client.Client;
 import ee.playtech.wallet.socket.server.Server;
 
 public class Program {
@@ -39,12 +35,14 @@ public class Program {
     // log.info(request.toString());
     // log.info(response.toString());
 
-    runServer(12345);
+    // runServer(12345);
 
-    for (int i = 0; i < 10; i++) {
-      Client client = new Client("localhost", 12345, new WalletChangeRequest(userName, new BigDecimal(1), System.currentTimeMillis()));
-      WalletChangeResponse walletResponse = client.getResponse();
-    }
+    // for (int i = 0; i < 10; i++) {
+    // Client client = new Client("localhost", 12345, new WalletChangeRequest(userName, new BigDecimal(1), System.currentTimeMillis()));
+    // WalletChangeResponse walletResponse = client.getResponse();
+    // }
+
+    System.out.println("username: " + userName);
 
   }
 
