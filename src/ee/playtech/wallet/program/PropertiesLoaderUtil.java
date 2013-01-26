@@ -20,6 +20,14 @@ public class PropertiesLoaderUtil {
     return getPropertiesLoader().getClientDelay();
   }
 
+  public static int getStatisticInterval() {
+    return getPropertiesLoader().getStatisticInterval();
+  }
+
+  public static int getClientRequestCount() {
+    return getPropertiesLoader().getClientRequestCount();
+  }
+
   private static PropertiesLoader getPropertiesLoader() {
     if (properties == null) {
       properties = PropertiesLoader.getInstance();

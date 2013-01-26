@@ -22,7 +22,6 @@ public class DatabaseServiceImpl implements DatabaseService {
       response.setBalanceAmount(newBalance);
       response.setBalanceVersion(balanceVersion);
     } catch (Exception e) {
-      e.printStackTrace();
       if (e instanceof NegativeBalanceException) {
         response.setErroCode(NegativeBalanceException.ERROR_CODE);
       } else {

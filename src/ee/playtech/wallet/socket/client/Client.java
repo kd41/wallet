@@ -29,7 +29,6 @@ public class Client {
   }
 
   public void start() {
-    log.info("Thread name: {}", Thread.currentThread().getName());
     try (Socket socket = new Socket(host, port)) {
       try {
         socket.setSoTimeout(3000);
@@ -43,10 +42,10 @@ public class Client {
           // send
           out.writeObject(message);
           out.flush();
-          log.info("Client sended: " + message);
+          log.debug("Client sended: " + message);
           // receive
           response = (WalletChangeResponse) in.readObject();
-          log.info("Client received: " + response);
+          log.debug("Client received: " + response);
         } catch (ClassNotFoundException e) {
           log.error(e.getMessage(), e);
         }

@@ -11,9 +11,6 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ee.playtech.wallet.socket.server.Server;
-
-
 public class Database {
   private static final Logger log = LoggerFactory.getLogger(Database.class);
 
@@ -33,7 +30,7 @@ public class Database {
       try {
         database.create();
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         System.exit(0);
       }
     }
@@ -41,7 +38,7 @@ public class Database {
   }
 
   public int save(String userName, BigDecimal amount) throws Exception {
-    log.info("Thread name: {}", Thread.currentThread().getName());
+    log.debug("Thread name: {}", Thread.currentThread().getName());
     int balanceVesion = 0;
     try (Connection conn = getHSQLConnection()) {
       String sql1 = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -102,23 +99,6 @@ public class Database {
       log.error(e.getMessage(), e);
     }
     return balance;
-  }
-
-  public void insertMockData() throws Exception {
-    save("alex1", new BigDecimal(12.4));
-    save("alex2", new BigDecimal(1.8));
-    save("alex3", new BigDecimal(2.3));
-  }
-
-  public void printData() throws Exception {
-    try (Connection conn = getHSQLConnection()) {
-      String query = "SELECT * FROM " + DB_TABLE;
-      PreparedStatement pt = conn.prepareStatement(query);
-      ResultSet rs = pt.executeQuery();
-      while (rs.next()) {
-        System.out.println(rs.getString("USERNAME") + ":" + rs.getInt("BALANCE_VERSION") + ":" + rs.getBigDecimal("BALANCE"));
-      }
-    }
   }
 
   private void create() throws Exception {

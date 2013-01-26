@@ -1,64 +1,41 @@
 package ee.playtech.wallet.program;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ee.playtech.wallet.database.services.DatabaseService;
-import ee.playtech.wallet.database.services.DatabaseServiceImpl;
+import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.socket.client.Client;
 import ee.playtech.wallet.socket.server.Server;
 
 public class Program {
   private static final Logger log = LoggerFactory.getLogger(Program.class);
 
-  private static DatabaseService service = new DatabaseServiceImpl();
   private static Thread serverThread;
 
   public static void main(String... args) throws Exception {
-    String mode = args.length > 0 ? args[0] : "";
-    if (args.length == 0) {
-      // TODO: run test client
-    } else if ("server".equals(mode)) {
+    String userName = args.length > 0 ? args[0] : "alex1";
+    if ("${userName}".equals(userName)) {
+      userName = "server";
+      System.out.println("run server");
       runServer(PropertiesLoaderUtil.getServerPort());
+    } else if (args.length == 1) {
+      System.out.println("run client");
+      runClient(userName, PropertiesLoaderUtil.getClientDelay(), PropertiesLoaderUtil.getClientRequestCount());
     }
 
-    String userName = "alex1";
-
-    // Database database = Database.getInstance();
-    // // database.insertMockData();
-    // database.getVersionByUsername(userName);
-    // database.printData();
-
-    // WalletRequest request = new WalletRequest();
-    // request.setBalanceChange(new BigDecimal(1));
-    // request.setTransactionID(System.currentTimeMillis());
-    // request.setUserName(userName);
-    // System.out.println(request);
-    // WalletResponse response = service.getWalletResponse(request);
-    // System.out.println(response);
-    //
-    // database.printData();
-
-    // log.info(request.toString());
-    // log.info(response.toString());
-
-    runServer(PropertiesLoaderUtil.getServerPort());
-
-    // for (int i = 0; i < 10; i++) {
-    // Client client = new Client("localhost", 12345, new WalletChangeRequest(userName, new BigDecimal(1), System.currentTimeMillis()));
-    // WalletChangeResponse walletResponse = client.getResponse();
-    // }
-
     System.out.println("username: " + userName);
-
+    System.out.println("server.port= " + PropertiesLoaderUtil.getServerPort());
+    System.out.println("statistic.interval: " + PropertiesLoaderUtil.getStatisticInterval());
+    System.out.println("client.port: " + PropertiesLoaderUtil.getClientPort());
+    System.out.println("server.host: " + PropertiesLoaderUtil.getServerHost());
+    System.out.println("client.delay: " + PropertiesLoaderUtil.getClientDelay());
+    System.out.println("client.request.count: " + PropertiesLoaderUtil.getClientRequestCount());
   }
 
   private static void runServer(final int port) {
-    if (serverThread != null) {
-      serverThread.interrupt();
-      serverThread = null;
-    }
     serverThread = new Thread() {
       @Override
       public void run() {
@@ -71,4 +48,31 @@ public class Program {
     };
     serverThread.start();
   }
+
+  private static void runClient(final String userName, final int sleepMilliseconds, final int count) {
+    Thread t = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        final String name = Thread.currentThread().getName();
+        int i = 0;
+        do {
+          new Client(PropertiesLoaderUtil.getServerHost(), PropertiesLoaderUtil.getServerPort(), getTestRequest(name));
+          log.info("change wallet for: {}", name);
+          try {
+            Thread.sleep(sleepMilliseconds);
+          } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+          }
+          i++;
+        } while (i < count);
+      }
+    }, userName);
+    t.start();
+  }
+
+  private static WalletChangeRequest getTestRequest(final String userName) {
+    int balanceChange = -100 + (int) (Math.random() * 200);
+    return new WalletChangeRequest(userName, new BigDecimal(balanceChange), System.currentTimeMillis());
+  }
+
 }

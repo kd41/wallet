@@ -43,7 +43,9 @@
 	</target>
 
 	<target name="run">
-		<java jar="${build.folder}/${jar.name}" fork="true" />
+		<java jar="${build.folder}/${jar.name}" fork="true" >
+			<arg value="${userName}" />
+		</java>
 	</target>
 
 </project>

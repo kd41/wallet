@@ -14,7 +14,6 @@ import ee.playtech.wallet.database.services.WalletChangeRequest;
 
 public class Server {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
-  private static final Logger _log = LoggerFactory.getLogger("server");
 
   protected boolean isRunning = true;
   private ServerSocket serverSocket;
@@ -22,10 +21,9 @@ public class Server {
 
   public Server(int port) throws IOException {
     serverSocket = new ServerSocket(port);
-    int count = 0;
     while (isRunning) {
       Socket clientSocket = serverSocket.accept();
-      ServerThread thread = new ServerThread(clientSocket, count++);
+      ServerThread thread = new ServerThread(clientSocket);
       thread.run();
     }
   }
@@ -36,12 +34,10 @@ public class Server {
 
   private class ServerThread extends Thread {
     private Socket clientSocket;
-    private int count = -1;
     private WalletChangeRequest message;
 
-    private ServerThread(Socket clientSocket, int count) {
+    private ServerThread(Socket clientSocket) {
       this.clientSocket = clientSocket;
-      this.count = count;
     }
 
     @Override
@@ -50,7 +46,6 @@ public class Server {
         out.flush();
         try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
           do {
-            log.info("Thread name: {}", Thread.currentThread().getName());
             try {
               message = (WalletChangeRequest) in.readObject();
               out.writeObject(service.getWalletResponse(message));
