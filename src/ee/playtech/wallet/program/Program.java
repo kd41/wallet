@@ -42,7 +42,7 @@ public class Program {
         try {
           new Server(port);
         } catch (IOException e) {
-          e.printStackTrace();
+          log.error(e.getMessage(), e);
         }
       }
     };
@@ -57,7 +57,6 @@ public class Program {
         int i = 0;
         do {
           new Client(PropertiesLoaderUtil.getServerHost(), PropertiesLoaderUtil.getServerPort(), getTestRequest(name));
-          log.info("change wallet for: {}", name);
           try {
             Thread.sleep(sleepMilliseconds);
           } catch (InterruptedException e) {

@@ -38,31 +38,30 @@ public class Database {
   }
 
   public int save(String userName, BigDecimal amount) throws Exception {
-    log.debug("Thread name: {}", Thread.currentThread().getName());
     int balanceVesion = 0;
-    try (Connection conn = getHSQLConnection()) {
+    try (Connection connection = getHSQLConnection()) {
       String sql1 = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
       String sql2 = "insert into " + DB_TABLE + " (USERNAME,BALANCE_VERSION,BALANCE) values (?, 1, ?)";
       String sql3 = "UPDATE " + DB_TABLE + " SET BALANCE_VERSION = ?, BALANCE = ? WHERE USERNAME = ?";
 
-      PreparedStatement pstmt1 = conn.prepareStatement(sql1);
-      PreparedStatement pstmt2 = conn.prepareStatement(sql2);
-      PreparedStatement pstmt3 = conn.prepareStatement(sql3);
+      PreparedStatement statement1 = connection.prepareStatement(sql1);
+      PreparedStatement statement2 = connection.prepareStatement(sql2);
+      PreparedStatement statement3 = connection.prepareStatement(sql3);
 
-      pstmt1.setString(1, userName);
-      ResultSet rset = pstmt1.executeQuery();
-      if (rset.next()) {
-        balanceVesion = rset.getInt("BALANCE_VERSION");
-        rset.close();
+      statement1.setString(1, userName);
+      ResultSet resultSet = statement1.executeQuery();
+      if (resultSet.next()) {
+        balanceVesion = resultSet.getInt("BALANCE_VERSION");
+        resultSet.close();
 
-        pstmt3.setInt(1, ++balanceVesion);
-        pstmt3.setBigDecimal(2, amount);
-        pstmt3.setString(3, userName);
-        pstmt3.executeUpdate();
+        statement3.setInt(1, ++balanceVesion);
+        statement3.setBigDecimal(2, amount);
+        statement3.setString(3, userName);
+        statement3.executeUpdate();
       } else {
-        pstmt2.setString(1, userName);
-        pstmt2.setBigDecimal(2, amount);
-        pstmt2.executeUpdate();
+        statement2.setString(1, userName);
+        statement2.setBigDecimal(2, amount);
+        statement2.executeUpdate();
         balanceVesion = 1;
       }
     }
@@ -71,13 +70,13 @@ public class Database {
 
   public int getVersionByUsername(String userName) {
     int version = 0;
-    try (Connection conn = getHSQLConnection()) {
+    try (Connection connection = getHSQLConnection()) {
       String query = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
-      PreparedStatement pt = conn.prepareStatement(query);
-      pt.setNString(1, userName);
-      ResultSet rs = pt.executeQuery();
-      while (rs.next()) {
-        version = rs.getInt("BALANCE_VERSION");
+      PreparedStatement statement = connection.prepareStatement(query);
+      statement.setNString(1, userName);
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        version = resultSet.getInt("BALANCE_VERSION");
       }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -87,13 +86,13 @@ public class Database {
 
   public BigDecimal getBalanceByUserName(String userName) {
     BigDecimal balance = new BigDecimal(0);
-    try (Connection conn = getHSQLConnection()) {
+    try (Connection connection = getHSQLConnection()) {
       String query = "SELECT BALANCE FROM " + DB_TABLE + " WHERE USERNAME = ?";
-      PreparedStatement pt = conn.prepareStatement(query);
-      pt.setNString(1, userName);
-      ResultSet rs = pt.executeQuery();
-      while (rs.next()) {
-        balance = rs.getBigDecimal("BALANCE");
+      PreparedStatement statement = connection.prepareStatement(query);
+      statement.setNString(1, userName);
+      ResultSet resultSet = statement.executeQuery();
+      while (resultSet.next()) {
+        balance = resultSet.getBigDecimal("BALANCE");
       }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -102,12 +101,12 @@ public class Database {
   }
 
   private void create() throws Exception {
-    try (Connection conn = getHSQLConnection()) {
-      Statement st = conn.createStatement();
+    try (Connection connection = getHSQLConnection()) {
+      Statement statement = connection.createStatement();
       String query = "select count(*) from " + DB_TABLE;
-      try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+      try (PreparedStatement pstmt = connection.prepareStatement(query)) {
       } catch (SQLSyntaxErrorException e) {
-        st.executeUpdate("create table " + DB_TABLE + " (USERNAME VARCHAR(20) PRIMARY KEY, BALANCE_VERSION INTEGER, BALANCE DECIMAL(13,2));");
+        statement.executeUpdate("create table " + DB_TABLE + " (USERNAME VARCHAR(20) PRIMARY KEY, BALANCE_VERSION INTEGER, BALANCE DECIMAL(13,2));");
       }
     }
   }

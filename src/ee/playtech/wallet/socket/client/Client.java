@@ -59,8 +59,4 @@ public class Client {
     return response;
   }
 
-  protected void setMessage(WalletChangeRequest message) {
-    this.message = message;
-  }
-
 }

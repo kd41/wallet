@@ -10,7 +10,6 @@ import ee.playtech.wallet.database.services.WalletChangeResponse;
 
 public class ServerServiceImpl implements ServerService {
   private static final Logger _log = LoggerFactory.getLogger("server");
-  private static final Logger log = LoggerFactory.getLogger(ServerServiceImpl.class);
 
   private DatabaseService service = new DatabaseServiceImpl();
 
