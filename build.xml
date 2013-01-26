@@ -25,6 +25,8 @@
 				<include name="**/*" />
 			</fileset> 
 		</copy>
+		<copy file="wallet.properties" todir="${build.folder}" />
+		<copy file="src/log4j.properties" todir="${build.folder}" />
 	
 		<javac srcdir="src" destdir="${build.folder}" includeantruntime="false">
 			<classpath refid="wallet.classpath" />
@@ -32,16 +34,16 @@
 	</target>
 
 	<target name="jar">
-		<jar destfile="${build.folder}/jar/${jar.name}" basedir="${build.folder}">
+		<jar destfile="${build.folder}/${jar.name}" basedir="${build.folder}">
 			<manifest>
 				<attribute name="Main-Class" value="ee.playtech.wallet.program.Program" />
-				<attribute name="Class-Path" value=". ${wallet.classpath}" />
+				<attribute name="Class-Path" value=". ${manifest.classpath}" />
 			</manifest>
 		</jar>
 	</target>
 
 	<target name="run">
-		<java jar="${build.folder}/jar/${jar.name}" fork="true" />
+		<java jar="${build.folder}/${jar.name}" fork="true" />
 	</target>
 
 </project>

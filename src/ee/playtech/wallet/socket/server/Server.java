@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ee.playtech.wallet.database.services.WalletChangeRequest;
-import ee.playtech.wallet.database.services.WalletChangeResponse;
 
 public class Server {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
@@ -25,7 +24,6 @@ public class Server {
     serverSocket = new ServerSocket(port);
     int count = 0;
     while (isRunning) {
-      log.info("here");
       Socket clientSocket = serverSocket.accept();
       ServerThread thread = new ServerThread(clientSocket, count++);
       thread.run();

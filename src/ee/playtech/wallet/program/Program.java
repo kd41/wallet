@@ -11,10 +11,18 @@ import ee.playtech.wallet.socket.server.Server;
 
 public class Program {
   private static final Logger log = LoggerFactory.getLogger(Program.class);
+
   private static DatabaseService service = new DatabaseServiceImpl();
   private static Thread serverThread;
 
   public static void main(String... args) throws Exception {
+    String mode = args.length > 0 ? args[0] : "";
+    if (args.length == 0) {
+      // TODO: run test client
+    } else if ("server".equals(mode)) {
+      runServer(PropertiesLoaderUtil.getServerPort());
+    }
+
     String userName = "alex1";
 
     // Database database = Database.getInstance();
@@ -35,7 +43,7 @@ public class Program {
     // log.info(request.toString());
     // log.info(response.toString());
 
-    // runServer(12345);
+    runServer(PropertiesLoaderUtil.getServerPort());
 
     // for (int i = 0; i < 10; i++) {
     // Client client = new Client("localhost", 12345, new WalletChangeRequest(userName, new BigDecimal(1), System.currentTimeMillis()));

@@ -8,7 +8,7 @@ public class Statistics {
   private long requestsCount;
 
   public Statistics() {
-    StatisticsThread thread = new StatisticsThread(1);
+    StatisticsThread thread = new StatisticsThread(5);
     thread.start();
   }
 
