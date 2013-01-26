@@ -1,0 +1,11 @@
+It is the simple client-server application based on Java 7.
+
+Database is build on hsql.
+
+Run server by 'ant all' command.
+
+Run client by 'ant -DuserName=[userName] run' command, where [userName] is a String. For example 'ant -DuserName=alex run'.
+
+The application configuration can be changed in 'wallet.properties' file.
+
+Logs located in '/logs' folder.
