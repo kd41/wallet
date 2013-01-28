@@ -25,9 +25,13 @@ public class Statistics {
   public Statistics() {
     delay = PropertiesLoaderUtil.getStatisticInterval();
     if (isEnabled()) {
-      StatisticCollector collector = new StatisticCollector();
       ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-      scheduler.scheduleAtFixedRate(collector, delay, delay, TimeUnit.SECONDS);
+      scheduler.scheduleAtFixedRate(new Runnable() {
+        @Override
+        public void run() {
+          calculateAndLogStatics();
+        }
+      }, 0, delay, TimeUnit.SECONDS);
     }
   }
 
@@ -45,21 +49,15 @@ public class Statistics {
     log.debug("Transaction {} has duration: {}ms", transactionID, duration);
   }
 
-  private void calculateAndLogStatics() {
-    List<Integer> temporaryDurationList = new LinkedList<>();
-    log.info("durationsList: {}", durationsList.size());
-    Collections.copy(temporaryDurationList, durationsList);
-    durationsList.clear();
-    log.info("temporaryDurationList: {}", temporaryDurationList.size());
-
-    int count = temporaryDurationList.size();
+  private synchronized void calculateAndLogStatics() {
+    int count = durationsList.size();
     if (count == 0) {
       log.info("No requests was during last interval");
       return;
     }
     int totalDuration = 0;
     for (int i = 0; i < count; i++) {
-      int duration = temporaryDurationList.get(i);
+      int duration = durationsList.get(i);
       if (maxDuration < duration) {
         maxDuration = duration;
       }
@@ -80,14 +78,6 @@ public class Statistics {
     if (log.isInfoEnabled()) {
       log.info("Requests: total count={}, per collected interval={}. Durations: max={}ms, min={}ms, average={}ms.", new Object[] { requestsCount, requestsCountPerTick,
                                                                                                                                   maxDuration, minDuration, averageDuration });
-    }
-  }
-
-  private class StatisticCollector implements Runnable {
-
-    @Override
-    public void run() {
-      calculateAndLogStatics();
     }
   }
 }
