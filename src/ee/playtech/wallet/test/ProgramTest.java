@@ -11,7 +11,6 @@ import ee.playtech.wallet.database.services.DatabaseService;
 import ee.playtech.wallet.database.services.DatabaseServiceImpl;
 import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.database.services.WalletChangeResponse;
-import ee.playtech.wallet.errors.NegativeBalanceException;
 
 public class ProgramTest {
   private static String USER_NAME = "testusername2";
@@ -49,6 +48,6 @@ public class ProgramTest {
   public void testNegativeBalance() {
     BigDecimal userBalance = service.getBalanceByUserName(USER_NAME);
     WalletChangeResponse response = service.getWalletResponse(new WalletChangeRequest(USER_NAME, userBalance.add(new BigDecimal(2)).negate(), 123L));
-    Assert.assertTrue("User balance can't be negative", (response.getBalanceAmount() == null && response.getErroCode() == NegativeBalanceException.ERROR_CODE));
+    Assert.assertTrue("User balance can't be negative", (response.getBalanceAmount() == null && response.getErroCode() == 1));
   }
 }

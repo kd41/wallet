@@ -46,30 +46,30 @@ public class PropertiesLoader {
   }
 
   public int getServerPort() {
-    return getIntPropertie(SERVER_PORT_KEY, DEFAULT_PORT);
+    return getIntProperty(SERVER_PORT_KEY, DEFAULT_PORT);
   }
 
   public int getClientPort() {
-    return getIntPropertie(CLIENT_PORT_KEY, DEFAULT_PORT);
+    return getIntProperty(CLIENT_PORT_KEY, DEFAULT_PORT);
   }
 
   public String getServerHost() {
-    return getStringPropertie(SERVER_HOST_KEY, DEFAULT_SERVER_HOST);
+    return getStringProperty(SERVER_HOST_KEY, DEFAULT_SERVER_HOST);
   }
 
   public int getClientDelay() {
-    return getIntPropertie(CLIENT_DELAY_KEY, DEFAULT_CLIENT_DELAY);
+    return getIntProperty(CLIENT_DELAY_KEY, DEFAULT_CLIENT_DELAY);
   }
 
   public int getStatisticInterval() {
-    return getIntPropertie(STATISTIC_INTERVAL_KEY, DEFAULT_STATISTIC_INTERVAL);
+    return getIntProperty(STATISTIC_INTERVAL_KEY, DEFAULT_STATISTIC_INTERVAL);
   }
 
   public int getClientRequestCount() {
-    return getIntPropertie(CLIENT_REQUEST_COUNT_KEY, DEFAULT_CLIENT_REQUEST_COUNT);
+    return getIntProperty(CLIENT_REQUEST_COUNT_KEY, DEFAULT_CLIENT_REQUEST_COUNT);
   }
 
-  private int getIntPropertie(String key, int defaultValue) {
+  private int getIntProperty(String key, int defaultValue) {
     int value = defaultValue;
     if (properties.containsKey(key)) {
       try {
@@ -81,7 +81,7 @@ public class PropertiesLoader {
     return value;
   }
 
-  private String getStringPropertie(String key, String defaultValue) {
+  private String getStringProperty(String key, String defaultValue) {
     return properties.containsKey(key) ? properties.getProperty(key) : defaultValue;
   }
 

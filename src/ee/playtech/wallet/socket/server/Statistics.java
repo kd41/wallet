@@ -3,6 +3,9 @@ package ee.playtech.wallet.socket.server;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +14,7 @@ import ee.playtech.wallet.program.PropertiesLoaderUtil;
 
 public class Statistics {
   private static final Logger log = LoggerFactory.getLogger("statistics");
-  private int tick;
+  private int delay;
   private int requestsCount;
   private int requestsCountPerTick;
   private int maxDuration;
@@ -20,15 +23,16 @@ public class Statistics {
   private List<Integer> durationsList = Collections.synchronizedList(new LinkedList<Integer>());
 
   public Statistics() {
-    tick = PropertiesLoaderUtil.getStatisticInterval();
+    delay = PropertiesLoaderUtil.getStatisticInterval();
     if (isEnabled()) {
-      StatisticsThread thread = new StatisticsThread(tick);
-      thread.start();
+      StatisticCollector collector = new StatisticCollector();
+      ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+      scheduler.scheduleAtFixedRate(collector, delay, delay, TimeUnit.SECONDS);
     }
   }
 
   public boolean isEnabled() {
-    return tick > 0;
+    return delay > 0;
   }
 
   public synchronized void incrementRequestsCount() {
@@ -41,15 +45,21 @@ public class Statistics {
     log.debug("Transaction {} has duration: {}ms", transactionID, duration);
   }
 
-  private synchronized void calculateAndLogStatics() {
-    int count = durationsList.size();
+  private void calculateAndLogStatics() {
+    List<Integer> temporaryDurationList = new LinkedList<>();
+    log.info("durationsList: {}", durationsList.size());
+    Collections.copy(temporaryDurationList, durationsList);
+    durationsList.clear();
+    log.info("temporaryDurationList: {}", temporaryDurationList.size());
+
+    int count = temporaryDurationList.size();
     if (count == 0) {
       log.info("No requests was during last interval");
       return;
     }
     int totalDuration = 0;
     for (int i = 0; i < count; i++) {
-      int duration = durationsList.get(i);
+      int duration = temporaryDurationList.get(i);
       if (maxDuration < duration) {
         maxDuration = duration;
       }
@@ -64,7 +74,6 @@ public class Statistics {
     maxDuration = Integer.MIN_VALUE;
     minDuration = Integer.MAX_VALUE;
     averageDuration = 0;
-    durationsList.clear();
   }
 
   private void logStatiscs() {
@@ -74,24 +83,11 @@ public class Statistics {
     }
   }
 
-  private class StatisticsThread extends Thread {
-    private int delaySeconds;
-
-    public StatisticsThread(int delaySeconds) {
-      this.delaySeconds = delaySeconds;
-    };
+  private class StatisticCollector implements Runnable {
 
     @Override
     public void run() {
-      long delay = delaySeconds * 1000;
-      do {
-        calculateAndLogStatics();
-        try {
-          Thread.sleep(delay);
-        } catch (InterruptedException e) {
-          log.error(e.getMessage(), e);
-        }
-      } while (true);
+      calculateAndLogStatics();
     }
   }
 }

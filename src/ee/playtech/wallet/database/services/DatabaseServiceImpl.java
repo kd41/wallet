@@ -2,11 +2,15 @@ package ee.playtech.wallet.database.services;
 
 import java.math.BigDecimal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ee.playtech.wallet.database.Database;
+import ee.playtech.wallet.errors.BaseWalletException;
 import ee.playtech.wallet.errors.NegativeBalanceException;
-import ee.playtech.wallet.errors.ServerException;
 
 public class DatabaseServiceImpl implements DatabaseService {
+  private static final Logger log = LoggerFactory.getLogger(DatabaseServiceImpl.class);
   private Database database;
 
   @Override
@@ -21,12 +25,11 @@ public class DatabaseServiceImpl implements DatabaseService {
       int balanceVersion = getDatabase().save(request.getUserName(), newBalance);
       response.setBalanceAmount(newBalance);
       response.setBalanceVersion(balanceVersion);
+    } catch (BaseWalletException e) {
+      response.setErroCode(e.getErrorCode());
+      log.debug(e.getMessage(), e);
     } catch (Exception e) {
-      if (e instanceof NegativeBalanceException) {
-        response.setErroCode(NegativeBalanceException.ERROR_CODE);
-      } else {
-        response.setErroCode(ServerException.ERROR_CODE);
-      }
+      log.error(e.getMessage(), e);
     }
 
     return response;

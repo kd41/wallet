@@ -54,9 +54,4 @@ public class Client {
       log.error(e.getMessage(), e);
     }
   }
-
-  public WalletChangeResponse getResponse() {
-    return response;
-  }
-
 }

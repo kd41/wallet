@@ -1,11 +1,16 @@
 package ee.playtech.wallet.errors;
 
-public class ServerException extends Exception {
+public class ServerException extends BaseWalletException {
   private static final long serialVersionUID = 1L;
 
-  public static final long ERROR_CODE = 666;
+  private static final long ERROR_CODE = 666;
 
   public ServerException(String message) {
     super(message);
+  }
+
+  @Override
+  public long getErrorCode() {
+    return ERROR_CODE;
   }
 }

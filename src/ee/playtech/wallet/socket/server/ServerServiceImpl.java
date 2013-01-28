@@ -9,7 +9,7 @@ import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.database.services.WalletChangeResponse;
 
 public class ServerServiceImpl implements ServerService {
-  private static final Logger _log = LoggerFactory.getLogger("server");
+  private static final Logger log = LoggerFactory.getLogger("server");
 
   private DatabaseService service = new DatabaseServiceImpl();
 
@@ -23,9 +23,9 @@ public class ServerServiceImpl implements ServerService {
       start = System.currentTimeMillis();
     }
 
-    _log.debug(request.toString());
+    log.debug(request.toString());
     WalletChangeResponse response = service.getWalletResponse(request);
-    _log.debug(response.toString());
+    log.debug(response.toString());
 
     if (statistics.isEnabled()) {
       long stop = System.currentTimeMillis();
