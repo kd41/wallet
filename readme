@@ -2,9 +2,9 @@ It is the simple client-server application based on Java 7.
 
 Clone application by 'git clone git@github.com:kd41/wallet.git' command.
 
-Database is build on hsql.
+Database is build on hsql and creates automatically in folder named 'data'.
 
-Run server by 'ant all' command.
+Run server by 'ant all' command. This command will to clean earlier build, compile and run the server.
 
 Run client by 'ant -DuserName=[userName] run' command, where [userName] is a String. For example 'ant -DuserName=alex run'.
 
