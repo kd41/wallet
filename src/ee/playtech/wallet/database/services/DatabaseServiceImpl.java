@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ee.playtech.wallet.database.Database;
 import ee.playtech.wallet.errors.BaseWalletException;
 import ee.playtech.wallet.errors.NegativeBalanceException;
+import ee.playtech.wallet.errors.ServerException;
 
 public class DatabaseServiceImpl implements DatabaseService {
   private static final Logger log = LoggerFactory.getLogger(DatabaseServiceImpl.class);
@@ -28,20 +29,17 @@ public class DatabaseServiceImpl implements DatabaseService {
     } catch (BaseWalletException e) {
       response.setErroCode(e.getErrorCode());
       log.debug(e.getMessage(), e);
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
     }
-
     return response;
   }
 
   @Override
-  public BigDecimal getBalanceByUserName(String userName) {
+  public BigDecimal getBalanceByUserName(String userName) throws ServerException {
     return getDatabase().getBalanceByUserName(userName);
   }
 
   @Override
-  public int getBalanceVersionByUserName(String userName) {
+  public int getBalanceVersionByUserName(String userName) throws ServerException {
     return getDatabase().getVersionByUsername(userName);
   }
 

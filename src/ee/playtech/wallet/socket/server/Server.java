@@ -32,7 +32,7 @@ public class Server {
     this.isRunning = false;
   }
 
-  private class ServerThread extends Thread {
+  private class ServerThread implements Runnable {
     private Socket clientSocket;
     private WalletChangeRequest message;
 

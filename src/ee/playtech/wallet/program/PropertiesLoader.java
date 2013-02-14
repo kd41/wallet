@@ -39,7 +39,7 @@ public class PropertiesLoader {
         properties.load(is);
       } catch (FileNotFoundException e) {
       } catch (IOException e) {
-        System.out.println(e);
+        log.error(e.getMessage(), e);
       }
     }
     return instance;

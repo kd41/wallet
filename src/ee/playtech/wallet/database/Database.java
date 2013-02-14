@@ -5,11 +5,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ee.playtech.wallet.errors.ServerException;
 
 public class Database {
   private static final Logger log = LoggerFactory.getLogger(Database.class);
@@ -37,7 +40,7 @@ public class Database {
     return database;
   }
 
-  public int save(String userName, BigDecimal amount) throws Exception {
+  public int save(String userName, BigDecimal amount) throws ServerException {
     int balanceVesion = 0;
     try (Connection connection = getHSQLConnection()) {
       String sql1 = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -64,11 +67,14 @@ public class Database {
         statement2.executeUpdate();
         balanceVesion = 1;
       }
+    } catch (SQLException e) {
+      log.error(e.getMessage(), e);
+      throw new ServerException("SQL Error by save for userName=" + userName);
     }
     return balanceVesion;
   }
 
-  public int getVersionByUsername(String userName) {
+  public int getVersionByUsername(String userName) throws ServerException {
     int version = 0;
     try (Connection connection = getHSQLConnection()) {
       String query = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -78,13 +84,14 @@ public class Database {
       while (resultSet.next()) {
         version = resultSet.getInt("BALANCE_VERSION");
       }
-    } catch (Exception e) {
+    } catch (SQLException e) {
       log.error(e.getMessage(), e);
+      throw new ServerException("SQL Error by getVersionByUsername for userName=" + userName);
     }
     return version;
   }
 
-  public BigDecimal getBalanceByUserName(String userName) {
+  public BigDecimal getBalanceByUserName(String userName) throws ServerException {
     BigDecimal balance = new BigDecimal(0);
     try (Connection connection = getHSQLConnection()) {
       String query = "SELECT BALANCE FROM " + DB_TABLE + " WHERE USERNAME = ?";
@@ -94,8 +101,9 @@ public class Database {
       while (resultSet.next()) {
         balance = resultSet.getBigDecimal("BALANCE");
       }
-    } catch (Exception e) {
+    } catch (SQLException e) {
       log.error(e.getMessage(), e);
+      throw new ServerException("SQL Error by getBalanceByUserName for userName=" + userName);
     }
     return balance;
   }
@@ -111,7 +119,7 @@ public class Database {
     }
   }
 
-  private static Connection getHSQLConnection() throws Exception {
+  private static Connection getHSQLConnection() throws SQLException {
     String url = "jdbc:hsqldb:data/" + DB_NAME;
     return DriverManager.getConnection(url, DB_USER, DB_PASSWORD);
   }

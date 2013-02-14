@@ -72,7 +72,7 @@ public class Statistics {
     maxDuration = Integer.MIN_VALUE;
     minDuration = Integer.MAX_VALUE;
     averageDuration = 0;
-    durationsList.clear();
+    durationsList.subList(0, count - 1).clear();
   }
 
   private void logStatiscs() {
