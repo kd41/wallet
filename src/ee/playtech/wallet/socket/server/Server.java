@@ -11,54 +11,51 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ee.playtech.wallet.database.services.WalletChangeRequest;
+import ee.playtech.wallet.database.services.WalletChangeResponse;
 
-public class Server {
-  private static final Logger log = LoggerFactory.getLogger(Server.class);
+public class Server implements Runnable {
+  private static final Logger log = LoggerFactory.getLogger("server");
 
-  protected boolean isRunning = true;
   private ServerSocket serverSocket;
   private ServerService service = new ServerServiceImpl();
+  private WalletChangeRequest message;
 
   public Server(int port) throws IOException {
     serverSocket = new ServerSocket(port);
-    while (isRunning) {
-      Socket clientSocket = serverSocket.accept();
-      ServerThread thread = new ServerThread(clientSocket);
-      thread.run();
-    }
   }
 
-  protected void stop() {
-    this.isRunning = false;
-  }
-
-  private class ServerThread implements Runnable {
-    private Socket clientSocket;
-    private WalletChangeRequest message;
-
-    private ServerThread(Socket clientSocket) {
-      this.clientSocket = clientSocket;
-    }
-
-    @Override
-    public void run() {
-      try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
-        out.flush();
-        try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
-          do {
-            try {
-              message = (WalletChangeRequest) in.readObject();
-              out.writeObject(service.getWalletResponse(message));
-              out.flush();
-            } catch (ClassNotFoundException e) {
-              log.error(e.getMessage(), e);
-            }
-          } while (true);
+  @Override
+  public void run() {
+    log.info("Server started");
+    while (true) {
+      Socket clientSocket = null;
+      try {
+        clientSocket = serverSocket.accept();
+        try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
+          out.flush();
+          try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
+            do {
+              try {
+                message = (WalletChangeRequest) in.readObject();
+                log.debug(":IN {}", message);
+                WalletChangeResponse response = service.getWalletResponse(message);
+                log.debug(":OUT  {}", response);
+                out.writeObject(response);
+                out.flush();
+              } catch (ClassNotFoundException e) {
+                log.error(e.getMessage(), e);
+              }
+            } while (true);
+          }
+        } catch (EOFException e) {
+        } catch (IOException e) {
+          log.error(e.getMessage(), e);
         }
-      } catch (EOFException e) {
+
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }
     }
   }
+
 }

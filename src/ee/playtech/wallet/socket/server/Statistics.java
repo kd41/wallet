@@ -16,7 +16,6 @@ public class Statistics {
   private static final Logger log = LoggerFactory.getLogger("statistics");
   private int delay;
   private int requestsCount;
-  private int requestsCountPerTick;
   private int maxDuration;
   private int minDuration;
   private int averageDuration;
@@ -41,7 +40,6 @@ public class Statistics {
 
   public synchronized void incrementRequestsCount() {
     requestsCount++;
-    requestsCountPerTick++;
   }
 
   public void storeStatistic(long transactionID, int duration) {
@@ -67,18 +65,17 @@ public class Statistics {
       totalDuration += duration;
     }
     averageDuration = totalDuration / count;
-    logStatiscs();
-    requestsCountPerTick = 0;
+    logStatiscs(count);
     maxDuration = Integer.MIN_VALUE;
     minDuration = Integer.MAX_VALUE;
     averageDuration = 0;
     durationsList.subList(0, count - 1).clear();
   }
 
-  private void logStatiscs() {
+  private void logStatiscs(int count) {
     if (log.isInfoEnabled()) {
-      log.info("Requests: total count={}, per collected interval={}. Durations: max={}ms, min={}ms, average={}ms.", new Object[] { requestsCount, requestsCountPerTick,
-                                                                                                                                  maxDuration, minDuration, averageDuration });
+      log.info("Requests: total count={}, per collected interval={}. Durations: max={}ms, min={}ms, average={}ms.", new Object[] { requestsCount, count, maxDuration,
+                                                                                                                                  minDuration, averageDuration });
     }
   }
 }

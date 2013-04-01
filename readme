@@ -1,6 +1,6 @@
 It is the simple client-server application based on Java 7.
 
-Clone application by 'git clone git@github.com:kd41/wallet.git' command.
+Clone application by 'git clone git@github.com:kd41/wallet.git' command or download as zip file (https://github.com/kd41/wallet/archive/master.zip).
 
 Database is build on hsql and creates automatically in folder named 'data'.
 

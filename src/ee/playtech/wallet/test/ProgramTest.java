@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import ee.playtech.wallet.database.services.BalanceRequest;
+import ee.playtech.wallet.database.services.BalanceResponse;
 import ee.playtech.wallet.database.services.DatabaseService;
 import ee.playtech.wallet.database.services.DatabaseServiceImpl;
 import ee.playtech.wallet.database.services.WalletChangeRequest;
@@ -25,48 +27,21 @@ public class ProgramTest {
 
   @Test
   public void testWallet() {
-    BigDecimal balance;
-    try {
-      balance = service.getBalanceByUserName(USER_NAME);
-      Assert.assertTrue("Wrong balance for user", balance.compareTo(new BigDecimal(0)) > 0);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Test
-  public void testBalanceVersionIncrement() {
-    int oldVersion;
-    try {
-      oldVersion = service.getBalanceVersionByUserName(USER_NAME);
-      WalletChangeResponse response = service.getWalletResponse(new WalletChangeRequest(USER_NAME, DEFAULT_BALANCE, 123L));
-      Assert.assertTrue("Wrong version incrementing", (response.getBalanceVersion() - oldVersion == 1));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    BalanceResponse balance = service.getBalanceByUserName(new BalanceRequest(USER_NAME, 124L));
+    Assert.assertTrue("Wrong balance for user", balance.getBalance().compareTo(new BigDecimal(0)) > 0);
   }
 
   @Test
   public void testZeroBalance() {
-    BigDecimal userBalance;
-    try {
-      userBalance = service.getBalanceByUserName(USER_NAME);
-      WalletChangeResponse response = service.getWalletResponse(new WalletChangeRequest(USER_NAME, userBalance.negate(), 123L));
-      Assert.assertTrue("User balance can be 0", response.getBalanceAmount().compareTo(new BigDecimal(0)) == 0);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    BalanceResponse balance = service.getBalanceByUserName(new BalanceRequest(USER_NAME, 125L));
+    WalletChangeResponse response = service.getWalletResponse(new WalletChangeRequest(USER_NAME, balance.getBalance().negate(), 126L));
+    Assert.assertTrue("User balance can be 0", response.getBalanceAmount().compareTo(new BigDecimal(0)) == 0);
   }
 
   @Test
   public void testNegativeBalance() {
-    BigDecimal userBalance;
-    try {
-      userBalance = service.getBalanceByUserName(USER_NAME);
-      WalletChangeResponse response = service.getWalletResponse(new WalletChangeRequest(USER_NAME, userBalance.add(new BigDecimal(2)).negate(), 123L));
-      Assert.assertTrue("User balance can't be negative", (response.getBalanceAmount() == null && response.getErroCode() == 1));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    BalanceResponse balance = service.getBalanceByUserName(new BalanceRequest(USER_NAME, 127L));
+    WalletChangeResponse response = service.getWalletResponse(new WalletChangeRequest(USER_NAME, balance.getBalance().add(DEFAULT_BALANCE).negate(), 128L));
+    Assert.assertTrue("User balance can't be negative", (response.getBalanceAmount() == null && response.getErroCode() == 1));
   }
 }

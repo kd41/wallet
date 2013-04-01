@@ -20,13 +20,11 @@ public class PropertiesLoader {
   private static final String SERVER_HOST_KEY = "server.host";
   private static final String STATISTIC_INTERVAL_KEY = "statistic.interval";
   private static final String CLIENT_DELAY_KEY = "client.delay";
-  private static final String CLIENT_REQUEST_COUNT_KEY = "client.request.count";
 
   private static final int DEFAULT_PORT = 14444;
   private static final String DEFAULT_SERVER_HOST = "localhost";
   private static final int DEFAULT_CLIENT_DELAY = 50;
   private static final int DEFAULT_STATISTIC_INTERVAL = 60;
-  private static final int DEFAULT_CLIENT_REQUEST_COUNT = 1000;
 
   private PropertiesLoader() {
   }
@@ -63,10 +61,6 @@ public class PropertiesLoader {
 
   public int getStatisticInterval() {
     return getIntProperty(STATISTIC_INTERVAL_KEY, DEFAULT_STATISTIC_INTERVAL);
-  }
-
-  public int getClientRequestCount() {
-    return getIntProperty(CLIENT_REQUEST_COUNT_KEY, DEFAULT_CLIENT_REQUEST_COUNT);
   }
 
   private int getIntProperty(String key, int defaultValue) {

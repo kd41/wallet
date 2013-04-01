@@ -3,18 +3,15 @@ package ee.playtech.wallet.database.services;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class WalletChangeResponse implements Serializable {
+public class BalanceResponse implements Serializable {
   private static final long serialVersionUID = 1L;
-
   private long transactionID;
   private long erroCode;
   private int balanceVersion;
-  private BigDecimal balanceChange;
-  private BigDecimal balanceAmount;
+  private BigDecimal balance;
 
-  public WalletChangeResponse(WalletChangeRequest request) {
+  public BalanceResponse(BalanceRequest request) {
     this.transactionID = request.getTransactionID();
-    this.balanceChange = request.getBalanceChange();
     this.erroCode = 0;
   }
 
@@ -42,25 +39,16 @@ public class WalletChangeResponse implements Serializable {
     this.balanceVersion = balanceVersion;
   }
 
-  public BigDecimal getBalanceChange() {
-    return balanceChange;
+  public BigDecimal getBalance() {
+    return balance;
   }
 
-  public void setBalanceChange(BigDecimal balanceChange) {
-    this.balanceChange = balanceChange;
-  }
-
-  public BigDecimal getBalanceAmount() {
-    return balanceAmount;
-  }
-
-  public void setBalanceAmount(BigDecimal balanceAmount) {
-    this.balanceAmount = balanceAmount;
+  public void setBalance(BigDecimal balance) {
+    this.balance = balance;
   }
 
   @Override
   public String toString() {
-    return "WalletChangeResponse [transactionID=" + transactionID + ", erroCode=" + erroCode + ", balanceVersion=" + balanceVersion + ", balanceChange=" + balanceChange
-           + ", balanceAmount=" + balanceAmount + "]";
+    return "BalanceResponse [transactionID=" + transactionID + ", erroCode=" + erroCode + ", balanceVersion=" + balanceVersion + ", balance=" + balance + "]";
   }
 }

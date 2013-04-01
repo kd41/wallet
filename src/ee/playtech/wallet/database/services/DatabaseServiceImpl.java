@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import ee.playtech.wallet.database.Database;
 import ee.playtech.wallet.errors.BaseWalletException;
+import ee.playtech.wallet.errors.ExceptionConstatnts;
 import ee.playtech.wallet.errors.NegativeBalanceException;
 import ee.playtech.wallet.errors.ServerException;
 
@@ -29,18 +30,27 @@ public class DatabaseServiceImpl implements DatabaseService {
     } catch (BaseWalletException e) {
       response.setErroCode(e.getErrorCode());
       log.debug(e.getMessage(), e);
+    } catch (Exception e) {
+      response.setErroCode(ExceptionConstatnts.INTERNAL_ERROR_CODE);
+      log.error(e.getMessage(), e);
     }
     return response;
   }
 
   @Override
-  public BigDecimal getBalanceByUserName(String userName) throws ServerException {
-    return getDatabase().getBalanceByUserName(userName);
-  }
-
-  @Override
-  public int getBalanceVersionByUserName(String userName) throws ServerException {
-    return getDatabase().getVersionByUsername(userName);
+  public BalanceResponse getBalanceByUserName(BalanceRequest request) {
+    BalanceResponse response = new BalanceResponse(request);
+    try {
+      response.setBalance(getDatabase().getBalanceByUserName(request.getUserName()));
+      response.setBalanceVersion(getDatabase().getVersionByUsername(request.getUserName()));
+    } catch (ServerException e) {
+      response.setErroCode(e.getErrorCode());
+      log.debug(e.getMessage(), e);
+    } catch (Exception e) {
+      response.setErroCode(ExceptionConstatnts.INTERNAL_ERROR_CODE);
+      log.error(e.getMessage(), e);
+    }
+    return response;
   }
 
   private synchronized Database getDatabase() {

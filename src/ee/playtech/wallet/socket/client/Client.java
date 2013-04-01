@@ -12,7 +12,7 @@ import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.database.services.WalletChangeResponse;
 import ee.playtech.wallet.socket.server.Server;
 
-public class Client {
+public class Client implements Runnable {
   private static final Logger log = LoggerFactory.getLogger(Server.class);
 
   private String host;
@@ -25,10 +25,10 @@ public class Client {
     this.host = host;
     this.port = port;
     this.message = message;
-    start();
   }
 
-  public void start() {
+  @Override
+  public void run() {
     try (Socket socket = new Socket(host, port)) {
       try {
         socket.setSoTimeout(3000);
@@ -42,10 +42,10 @@ public class Client {
           // send
           out.writeObject(message);
           out.flush();
-          log.debug("Client sended: " + message);
+          log.debug(":OUT {}", message);
           // receive
           response = (WalletChangeResponse) in.readObject();
-          log.debug("Client received: " + response);
+          log.debug(":IN {}", response);
         } catch (ClassNotFoundException e) {
           log.error(e.getMessage(), e);
         }

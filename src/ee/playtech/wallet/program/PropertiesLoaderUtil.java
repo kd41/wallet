@@ -24,10 +24,6 @@ public class PropertiesLoaderUtil {
     return getPropertiesLoader().getStatisticInterval();
   }
 
-  public static int getClientRequestCount() {
-    return getPropertiesLoader().getClientRequestCount();
-  }
-
   private static PropertiesLoader getPropertiesLoader() {
     if (properties == null) {
       properties = PropertiesLoader.getInstance();
