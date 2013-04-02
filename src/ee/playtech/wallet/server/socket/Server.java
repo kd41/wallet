@@ -1,4 +1,4 @@
-package ee.playtech.wallet.socket.server;
+package ee.playtech.wallet.server.socket;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.database.services.WalletChangeResponse;
+import ee.playtech.wallet.server.services.ServerService;
+import ee.playtech.wallet.server.services.ServerServiceImpl;
 
 public class Server implements Runnable {
   private static final Logger log = LoggerFactory.getLogger("server");

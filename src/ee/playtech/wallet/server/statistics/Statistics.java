@@ -1,4 +1,4 @@
-package ee.playtech.wallet.socket.server;
+package ee.playtech.wallet.server.statistics;
 
 import java.util.Collections;
 import java.util.LinkedList;

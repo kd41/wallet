@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ee.playtech.wallet.client.socket.Client;
 import ee.playtech.wallet.database.services.WalletChangeRequest;
-import ee.playtech.wallet.socket.client.Client;
-import ee.playtech.wallet.socket.server.Server;
+import ee.playtech.wallet.server.socket.Server;
 
 public class Program {
   private static final Logger log = LoggerFactory.getLogger(Program.class);

@@ -1,9 +1,10 @@
-package ee.playtech.wallet.socket.server;
+package ee.playtech.wallet.server.services;
 
 import ee.playtech.wallet.database.services.DatabaseService;
 import ee.playtech.wallet.database.services.DatabaseServiceImpl;
 import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.database.services.WalletChangeResponse;
+import ee.playtech.wallet.server.statistics.Statistics;
 
 public class ServerServiceImpl implements ServerService {
 

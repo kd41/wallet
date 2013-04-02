@@ -1,4 +1,4 @@
-package ee.playtech.wallet.socket.server;
+package ee.playtech.wallet.server.services;
 
 import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.database.services.WalletChangeResponse;
