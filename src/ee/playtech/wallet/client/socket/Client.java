@@ -36,19 +36,17 @@ public class Client implements Runnable {
         log.error("Client can't run on host: {} and port: {}", host, port);
         return;
       }
-      try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
+      try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream()); ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
+        // send
+        out.writeObject(message);
         out.flush();
-        try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-          // send
-          out.writeObject(message);
-          out.flush();
-          log.debug(":OUT {}", message);
-          // receive
-          response = (WalletChangeResponse) in.readObject();
-          log.debug(":IN {}", response);
-        } catch (ClassNotFoundException e) {
-          log.error(e.getMessage(), e);
-        }
+        log.debug(":OUT {}", message);
+
+        // receive
+        response = (WalletChangeResponse) in.readObject();
+        log.debug(":IN {}", response);
+      } catch (ClassNotFoundException e) {
+        log.error(e.getMessage(), e);
       }
     } catch (IOException e) {
       log.error(e.getMessage(), e);

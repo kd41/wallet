@@ -40,9 +40,9 @@ public class Database {
     return database;
   }
 
-  public int save(String userName, BigDecimal amount) throws ServerException {
-    int balanceVesion = 0;
+  public int saveAndGetBalanceVersion(String userName, BigDecimal amount) throws ServerException {
     try (Connection connection = getHSQLConnection()) {
+      int balanceVesion = 0;
       String sql1 = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
       String sql2 = "insert into " + DB_TABLE + " (USERNAME,BALANCE_VERSION,BALANCE) values (?, 1, ?)";
       String sql3 = "UPDATE " + DB_TABLE + " SET BALANCE_VERSION = ?, BALANCE = ? WHERE USERNAME = ?";
@@ -67,45 +67,41 @@ public class Database {
         statement2.executeUpdate();
         balanceVesion = 1;
       }
+      return balanceVesion;
     } catch (SQLException e) {
       log.error(e.getMessage(), e);
-      throw new ServerException("SQL Error by save for userName=" + userName);
     }
-    return balanceVesion;
+    throw new ServerException("Can't save data for user:" + userName);
   }
 
   public int getVersionByUsername(String userName) throws ServerException {
-    int version = 0;
     try (Connection connection = getHSQLConnection()) {
       String query = "SELECT BALANCE_VERSION FROM " + DB_TABLE + " WHERE USERNAME = ?";
       PreparedStatement statement = connection.prepareStatement(query);
       statement.setNString(1, userName);
       ResultSet resultSet = statement.executeQuery();
       if (resultSet.next()) {
-        version = resultSet.getInt("BALANCE_VERSION");
+        return resultSet.getInt("BALANCE_VERSION");
       }
     } catch (SQLException e) {
       log.error(e.getMessage(), e);
-      throw new ServerException("SQL Error by getVersionByUsername for userName=" + userName);
     }
-    return version;
+    throw new ServerException("Error by getVersionByUsername for userName=" + userName);
   }
 
   public BigDecimal getBalanceByUserName(String userName) throws ServerException {
-    BigDecimal balance = new BigDecimal(0);
     try (Connection connection = getHSQLConnection()) {
       String query = "SELECT BALANCE FROM " + DB_TABLE + " WHERE USERNAME = ?";
       PreparedStatement statement = connection.prepareStatement(query);
       statement.setNString(1, userName);
       ResultSet resultSet = statement.executeQuery();
       if (resultSet.next()) {
-        balance = resultSet.getBigDecimal("BALANCE");
+        return resultSet.getBigDecimal("BALANCE");
       }
     } catch (SQLException e) {
       log.error(e.getMessage(), e);
-      throw new ServerException("SQL Error by getBalanceByUserName for userName=" + userName);
     }
-    return balance;
+    throw new ServerException("Error by getBalanceByUserName for userName=" + userName);
   }
 
   private void create() throws Exception {

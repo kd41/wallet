@@ -24,7 +24,7 @@ public class DatabaseServiceImpl implements DatabaseService {
       if (newBalance.signum() < 0) {
         throw new NegativeBalanceException(request.getUserName() + " can't have negative balance");
       }
-      int balanceVersion = getDatabase().save(request.getUserName(), newBalance);
+      int balanceVersion = getDatabase().saveAndGetBalanceVersion(request.getUserName(), newBalance);
       response.setBalanceAmount(newBalance);
       response.setBalanceVersion(balanceVersion);
     } catch (BaseWalletException e) {

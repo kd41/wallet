@@ -16,8 +16,8 @@ public class ServerServiceImpl implements ServerService {
   public WalletChangeResponse getWalletResponse(WalletChangeRequest request) {
     long start = 0;
     if (statistics.isEnabled()) {
-      statistics.incrementRequestsCount();
       start = System.currentTimeMillis();
+      statistics.incrementRequestsCount();
     }
 
     WalletChangeResponse response = service.getWalletResponse(request);
