@@ -14,25 +14,25 @@ import ee.playtech.wallet.database.services.WalletChangeRequest;
 import ee.playtech.wallet.server.socket.Server;
 
 public class Program {
-  private static final Logger log = LoggerFactory.getLogger(Program.class);
+  private static final Logger log = LoggerFactory.getLogger("console");
 
   public static void main(String... args) throws Exception {
     String userName = args.length > 0 ? args[0] : "alex1";
     if ("${userName}".equals(userName)) {
       userName = "server";
-      System.out.println("run server");
+      log.debug("run server");
       runServer(PropertiesLoaderUtil.getServerPort());
     } else if (args.length == 1) {
-      System.out.println("run client: " + userName);
+      log.debug("run client: {}", userName);
       runClient(userName, PropertiesLoaderUtil.getClientDelay());
     }
 
-    System.out.println("username: " + userName);
-    System.out.println("server.port= " + PropertiesLoaderUtil.getServerPort());
-    System.out.println("statistic.interval: " + PropertiesLoaderUtil.getStatisticInterval());
-    System.out.println("client.port: " + PropertiesLoaderUtil.getClientPort());
-    System.out.println("server.host: " + PropertiesLoaderUtil.getServerHost());
-    System.out.println("client.delay: " + PropertiesLoaderUtil.getClientDelay());
+    log.debug("username: {}", userName);
+    log.debug("server.port = {}", PropertiesLoaderUtil.getServerPort());
+    log.debug("statistic.interval: {}", PropertiesLoaderUtil.getStatisticInterval());
+    log.debug("client.port: {}", PropertiesLoaderUtil.getClientPort());
+    log.debug("server.host: {}", PropertiesLoaderUtil.getServerHost());
+    log.debug("client.delay: {}", PropertiesLoaderUtil.getClientDelay());
   }
 
   private static void runServer(final int port) {

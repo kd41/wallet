@@ -1,11 +1,12 @@
 package ee.playtech.wallet.server.statistics;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +16,11 @@ import ee.playtech.wallet.program.PropertiesLoaderUtil;
 public class Statistics {
   private static final Logger log = LoggerFactory.getLogger("statistics");
   private int delay;
-  private int requestsCount;
-  private int maxDuration;
-  private int minDuration;
+  private AtomicInteger requestsCount = new AtomicInteger();
+  private int maxDuration = Integer.MIN_VALUE;
+  private int minDuration = Integer.MAX_VALUE;
   private int averageDuration;
-  private List<Integer> durationsList = Collections.synchronizedList(new LinkedList<Integer>());
+  private List<Integer> durationsList = Collections.synchronizedList(new ArrayList<Integer>());
 
   public Statistics() {
     delay = PropertiesLoaderUtil.getStatisticInterval();
@@ -38,8 +39,8 @@ public class Statistics {
     return delay > 0;
   }
 
-  public synchronized void incrementRequestsCount() {
-    requestsCount++;
+  public void incrementRequestsCount() {
+    requestsCount.incrementAndGet();
   }
 
   public void storeStatistic(long transactionID, int duration) {
@@ -69,7 +70,7 @@ public class Statistics {
     maxDuration = Integer.MIN_VALUE;
     minDuration = Integer.MAX_VALUE;
     averageDuration = 0;
-    durationsList.subList(0, count - 1).clear();
+    durationsList.subList(0, count).clear();
   }
 
   private void logStatiscs(int count) {

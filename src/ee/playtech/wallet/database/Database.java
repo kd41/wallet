@@ -81,7 +81,7 @@ public class Database {
       PreparedStatement statement = connection.prepareStatement(query);
       statement.setNString(1, userName);
       ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
+      if (resultSet.next()) {
         version = resultSet.getInt("BALANCE_VERSION");
       }
     } catch (SQLException e) {
@@ -98,7 +98,7 @@ public class Database {
       PreparedStatement statement = connection.prepareStatement(query);
       statement.setNString(1, userName);
       ResultSet resultSet = statement.executeQuery();
-      while (resultSet.next()) {
+      if (resultSet.next()) {
         balance = resultSet.getBigDecimal("BALANCE");
       }
     } catch (SQLException e) {
