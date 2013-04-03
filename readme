@@ -4,9 +4,11 @@ Clone application by 'git clone git@github.com:kd41/wallet.git' command or downl
 
 Database is build on hsql and creates automatically in folder named 'data'.
 
-Run server by 'ant all' command. This command will to clean earlier build, compile and run the server.
+Build project using maven 'mvn clean install'.
 
-Run client by 'ant -DuserName=[userName] run' command, where [userName] is a String. For example 'ant -DuserName=alex run'.
+Run server by 'java -jar wallet-1.0-SNAPSHOT.jar' command from 'target' folder.
+
+Run client by 'java -jar wallet-1.0-SNAPSHOT.jar [userName]' command, where [userName] is a String. For example 'java -jar wallet-1.0-SNAPSHOT.jar client1'.
 
 The application configuration can be changed in 'wallet.properties' file.
 
