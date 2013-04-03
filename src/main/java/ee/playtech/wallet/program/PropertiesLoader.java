@@ -1,8 +1,7 @@
 package ee.playtech.wallet.program;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -33,9 +32,8 @@ public class PropertiesLoader {
     if (instance == null) {
       instance = new PropertiesLoader();
       properties = new Properties();
-      try (FileInputStream is = new FileInputStream(RESOURCE_FILE_NAME)) {
+      try (InputStream is = PropertiesLoader.class.getClassLoader().getResourceAsStream(RESOURCE_FILE_NAME)) {
         properties.load(is);
-      } catch (FileNotFoundException e) {
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }

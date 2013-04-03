@@ -16,7 +16,7 @@ public class Program {
 
   public static void main(String... args) {
     String userName = args.length > 0 ? args[0] : "alex1";
-    if ("${userName}".equals(userName)) {
+    if (args.length == 0) {
       userName = "server";
       log.debug("run server");
       runServer(PropertiesLoaderUtil.getServerPort());
