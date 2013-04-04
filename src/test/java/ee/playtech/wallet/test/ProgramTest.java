@@ -2,6 +2,7 @@ package ee.playtech.wallet.test;
 
 import java.math.BigDecimal;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +24,12 @@ public class ProgramTest {
   public void prepare() throws Exception {
     service = new DatabaseServiceImpl();
     service.getWalletResponse(new WalletChangeRequest(USER_NAME, DEFAULT_BALANCE, 123L));
+  }
+
+  @After
+  public void end() throws Exception {
+    BalanceResponse balance = service.getBalanceByUserName(new BalanceRequest(USER_NAME, 127L));
+    service.getWalletResponse(new WalletChangeRequest(USER_NAME, balance.getBalance().negate(), 128L));
   }
 
   @Test
