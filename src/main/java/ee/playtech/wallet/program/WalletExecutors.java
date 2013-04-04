@@ -11,7 +11,7 @@ public class WalletExecutors {
 
   public static ScheduledExecutorService getClientExecutor() {
     if (clientExecutor == null) {
-      clientExecutor = Executors.newSingleThreadScheduledExecutor();
+      clientExecutor = Executors.newScheduledThreadPool(PropertiesLoader.getInstance().getClientsCount());
     }
     return clientExecutor;
   }

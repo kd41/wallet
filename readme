@@ -8,7 +8,7 @@ Build project using maven 'mvn clean install'.
 
 Run server by 'java -jar wallet-1.0-SNAPSHOT.jar' command from 'target' folder.
 
-Run client by 'java -jar wallet-1.0-SNAPSHOT.jar [userName]' command, where [userName] is a String. For example 'java -jar wallet-1.0-SNAPSHOT.jar client1'.
+Run client by 'java -jar wallet-1.0-SNAPSHOT.jar [userName1] [userName2] [userName3]' command  from 'target' folder, where [userName*] are a Strings. For example 'java -jar wallet-1.0-SNAPSHOT.jar client1 client2 client3 client4'. Count of clients can be from 1 to N.
 
 The application configuration can be changed in 'wallet.properties' file.
 

@@ -2,6 +2,7 @@ package ee.playtech.wallet.program;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -15,17 +16,18 @@ public class Program {
   private static final Logger log = LoggerFactory.getLogger("console");
 
   public static void main(String... args) {
-    String userName = args.length > 0 ? args[0] : "alex1";
     if (args.length == 0) {
-      userName = "server";
       log.debug("run server");
       runServer(PropertiesLoaderUtil.getServerPort());
-    } else if (args.length == 1) {
-      log.debug("run client: {}", userName);
-      runClient(userName, PropertiesLoaderUtil.getClientDelay());
+    } else {
+      log.debug("clients: {}", Arrays.toString(args));
+      PropertiesLoader.getInstance().setClientsCount(args.length);
+      for (String client : args) {
+        log.debug("run client: {}", client);
+        runClient(client, PropertiesLoaderUtil.getClientDelay());
+      }
     }
 
-    log.debug("username: {}", userName);
     log.debug("server.port = {}", PropertiesLoaderUtil.getServerPort());
     log.debug("statistic.interval: {}", PropertiesLoaderUtil.getStatisticInterval());
     log.debug("client.port: {}", PropertiesLoaderUtil.getClientPort());

@@ -25,6 +25,8 @@ public class PropertiesLoader {
   private static final int DEFAULT_CLIENT_DELAY = 50;
   private static final int DEFAULT_STATISTIC_INTERVAL = 60;
 
+  private static int clientsCount = 1;
+
   private PropertiesLoader() {
   }
 
@@ -59,6 +61,14 @@ public class PropertiesLoader {
 
   public int getStatisticInterval() {
     return getIntProperty(STATISTIC_INTERVAL_KEY, DEFAULT_STATISTIC_INTERVAL);
+  }
+
+  protected int getClientsCount() {
+    return clientsCount;
+  }
+
+  protected void setClientsCount(int clientsCount) {
+    PropertiesLoader.clientsCount = clientsCount;
   }
 
   private int getIntProperty(String key, int defaultValue) {
