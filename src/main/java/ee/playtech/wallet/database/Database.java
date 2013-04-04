@@ -83,7 +83,7 @@ public class Database {
       if (resultSet.next()) {
         return resultSet.getInt("BALANCE_VERSION");
       } else {
-        saveAndGetBalanceVersion(userName, new BigDecimal(0));
+        return saveAndGetBalanceVersion(userName, new BigDecimal(0));
       }
     } catch (SQLException e) {
       log.error(e.getMessage(), e);
@@ -100,7 +100,9 @@ public class Database {
       if (resultSet.next()) {
         return resultSet.getBigDecimal("BALANCE");
       } else {
-        saveAndGetBalanceVersion(userName, new BigDecimal(0));
+        BigDecimal balance = new BigDecimal(0);
+        saveAndGetBalanceVersion(userName, balance);
+        return balance;
       }
     } catch (SQLException e) {
       log.error(e.getMessage(), e);
