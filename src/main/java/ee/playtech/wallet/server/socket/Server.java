@@ -33,28 +33,31 @@ public class Server implements Runnable {
       Socket clientSocket = null;
       try {
         clientSocket = serverSocket.accept();
-        try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream()); ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
-          do {
-            try {
-              // receive
-              message = (WalletChangeRequest) in.readObject();
-              log.debug(":IN {}", message);
-
-              WalletChangeResponse response = service.getWalletResponse(message);
-
-              // send
-              out.writeObject(response);
-              out.flush();
-              log.debug(":OUT  {}", response);
-            } catch (ClassNotFoundException e) {
-              log.error(e.getMessage(), e);
-            }
-          } while (true);
+        try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
+          out.flush();
+          try (ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
+            do {
+              try {
+                message = (WalletChangeRequest) in.readObject();
+                log.debug(":IN {}", message);
+                WalletChangeResponse response = service.getWalletResponse(message);
+                log.debug(":OUT  {}", response);
+                out.writeObject(response);
+                out.flush();
+              } catch (ClassNotFoundException e) {
+                log.error(e.getMessage(), e);
+              }
+            } while (true);
+          }
+        } catch (EOFException e) {
+        } catch (IOException e) {
+          log.error(e.getMessage(), e);
         }
-      } catch (EOFException e) {
+
       } catch (IOException e) {
         log.error(e.getMessage(), e);
       }
     }
   }
+
 }
